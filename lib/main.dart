@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(CatatanApp());
@@ -107,9 +108,14 @@ class _CatatanListState extends State<CatatanList> {
       body: ListView.builder(
         itemCount: catatans.length,
         itemBuilder: (context, index) {
+          String originalDate = catatans[index].date;
+          DateTime dateTime = DateTime.parse(originalDate);
+          String formattedDate =
+              DateFormat('dd MMM yyyy HH:mm').format(dateTime);
+
           return ListTile(
             title: Text(catatans[index].title),
-            subtitle: Text(catatans[index].date),
+            subtitle: Text(formattedDate),
             onTap: () {
               Navigator.push(
                 context,
@@ -246,11 +252,11 @@ class _CatatanFormState extends State<CatatanForm> {
               TextFormField(
                 controller: descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'Isi',
+                  labelText: 'Deskripsi',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Isi tidak boleh kosong';
+                    return 'Deskripsi tidak boleh kosong';
                   }
                   return null;
                 },
@@ -286,6 +292,10 @@ class CatatanDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String originalDate = catatan.date;
+    DateTime dateTime = DateTime.parse(originalDate);
+    String formattedDate = DateFormat('dd MMM yyyy HH:mm').format(dateTime);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Detail Catatan'),
@@ -304,7 +314,7 @@ class CatatanDetail extends StatelessWidget {
             ),
             SizedBox(height: 8.0),
             Text(
-              catatan.date,
+              formattedDate,
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
